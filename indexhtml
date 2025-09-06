@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مولد QR Code</title>
+  <!-- مكتبة QRCode من jsDelivr بدل RawGit -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    #url-input {
+      width: 80%;
+      padding: 10px;
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #generate-btn {
+      background-color: #4CAF50;
+    }
+    #generate-btn:hover {
+      background-color: #45a049;
+    }
+    #clear-btn {
+      background-color: #f44336;
+    }
+    #clear-btn:hover {
+      background-color: #d32f2f;
+    }
+    #qrcode {
+      margin: 30px auto;
+      display: none;
+    }
+    #download-btn {
+      display: none;
+      margin: 20px auto;
+      background-color: #2196F3;
+    }
+    #download-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+  <h1>مولد QR Code</h1>
+  <p>أدخل الرابط الذي تريد تحويله إلى QR Code:</p>
+  <p>Basil Aladra</p>
+  <div class="c">
+    <a href="https://github.com/Basil-Aladra">
+      <img width="50" height="50" src="https://img.icons8.com/3d-fluency/94/github-logo.png" alt="github-logo"/>
+    </a>
+  </div>
+
+  <input type="url" id="url-input" placeholder="https://example.com" required>
+
+  <div class="button-group">
+    <button id="generate-btn">إنشاء QR Code</button>
+    <button id="clear-btn">مسح</button>
+  </div>
+
+  <div id="qrcode"></div>
+  <button id="download-btn">تحميل QR Code</button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const generateBtn = document.getElementById('generate-btn');
+      const clearBtn = document.getElementById('clear-btn');
+      const downloadBtn = document.getElementById('download-btn');
+      const urlInput = document.getElementById('url-input');
+      const qrcodeDiv = document.getElementById('qrcode');
+      
+      let qrcode = null;
+
+      generateBtn.addEventListener('click', function() {
+        const url = urlInput.value.trim();
+        if (!url) {
+          alert('الرجاء إدخال رابط صحيح');
+          return;
+        }
+
+        qrcodeDiv.innerHTML = '';
+        qrcode = new QRCode(qrcodeDiv, {
+          text: url,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        qrcodeDiv.style.display = 'block';
+        downloadBtn.style.display = 'inline-block';
+      });
+
+      clearBtn.addEventListener('click', function() {
+        urlInput.value = '';
+        qrcodeDiv.innerHTML = '';
+        qrcodeDiv.style.display = 'none';
+        downloadBtn.style.display = 'none';
+      });
+
+      downloadBtn.addEventListener('click', function() {
+        if (!qrcode) return;
+        const canvas = qrcodeDiv.querySelector('canvas');
+        if (!canvas) return;
+
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    });
+  </script>
+</body>
+</html>
